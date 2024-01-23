@@ -1,3 +1,6 @@
+import React from "react"
+import ReactDOM  from "react-dom/client"
+
 let parent = document.getElementById("rootJS")
 let heading = document.createElement("h1")
 heading.innerHTML = "hello world from javascript"
