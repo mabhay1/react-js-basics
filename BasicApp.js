@@ -27,13 +27,14 @@ const Title=() =>(
 //     return <h1 className="heading">Namaste React Functional Component</h1>
 // }
 a=[1,2,3]
+a.map((value)=><Title/>)
 const num=100;
 const HeadingComponent=()=>(
     <div id="container">
-        {heading}
+        {/* {heading}
         {100+7}
-        <h1>{num}</h1>
-
+        <h1>{num}</h1> */}
+        
         <Title/>
         <h1 className="heading">Namaste React Functional Component</h1>
     </div>   
