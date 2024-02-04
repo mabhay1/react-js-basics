@@ -3,15 +3,33 @@ import RestaurantCard from "./RestaurantCard"
 import { useState,useEffect } from "react"
 import Shimmer from "./Shimmer"
 import { Link } from "react-router-dom"
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 1024 },
+      items: 4,
+      slidesToSlide: 2
+    },
+    desktop: {
+      breakpoint: { max: 1024, min: 800 },
+      items: 3,
+    },
+    tablet: {
+      breakpoint: { max: 800, min: 464 },
+      items: 2
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1
+    }
+  };
 
 const NewSection = () => {
 
     const [listOfItems,setListOfItems] = useState([])
     const [sectionTitle,setSectionTitle] = useState("")
-    const [prev,setPrev] = useState(0)
-    const [next,setNext] = useState(6)
-    const [prev1,setPrev1] = useState(0)
-    const [next1,setNext1] = useState(4)
 
 
     const [listRes,setListRes] = useState([])
@@ -45,76 +63,30 @@ const NewSection = () => {
     ): (
         <div style={{width:"90%",margin:"auto"}}>
          <div>
-         <div className="heading-buttons" style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+         <div className="heading" >
             <h1>{sectionTitle}</h1>    
-            <div className="next-prev-buttons">
-         
-            <button className="btn-prev" onClick={
-                ()=>{
-                        console.log("prev called")
-                        if((prev+1)>1)
-                        {
-                            setPrev(prev-1)
-                            setNext(next-1)
-                        }
-                    }
-            }>
-                {"prev"}
-            </button>
-            <button className="btn-next" onClick={()=>{
-            console.log("next called")
-            if((next+1)<=listOfItems.length){
-            setNext(next+1)
-            setPrev(prev+1)
-            }
-            }}>{"next"}</button>
-            </div> 
         </div>   
     
-
-             
-            <div style={{
-                display:"flex",
-        }}>                                   
-              {listOfItems.slice(prev,next).map((Item)=>(
+        <Carousel responsive={responsive} className="items" >
+        {listOfItems.map((Item)=>(
                     <NewSectionChild key={Item.id} itemData={Item} />               
               ))}
+        </Carousel>;
+             
 
-            </div>
         </div>
-        <div className="heading-buttons" style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <div className="heading-buttons" >
             <h1>{sectionTitle2}</h1>  
-            <div className="next-prev-buttons">
-         
-         <button className="btn-prev" onClick={
-             ()=>{
-                     console.log("prev1 called")
-                     if((prev1+1)>1)
-                     {
-                         setPrev1(prev1-1)
-                         setNext1(next1-1)
-                     }
-                 }
-         }>
-             {"prev1"}
-         </button>
-         <button className="btn-next" onClick={()=>{
-         console.log("next1 called")
-         if((next1+1)<=listRes.length){
-         setNext1(next1+1)
-         setPrev1(prev1+1)
-         }
-         }}>{"next1"}</button>
-         </div> 
+
         </div>
-        
-        <div style={{display:"flex",gap:"20px"}}>                                       
-              {listRes.slice(prev1,next1).map((restaurant)=>(
+        <Carousel responsive={responsive} className="top-res">                           
+              {listRes.map((restaurant)=>(
                 <Link key={restaurant.info.id} to={"/restaurants/"+restaurant.info.id}>
                     <RestaurantCard resData={restaurant} />
                 </Link>
               ))}
-            </div>
+              </Carousel>
+            
             <h1>{sectionTitle3}</h1>  
         <div className="res-container">                                       
               {listRes2.map((restaurant)=>(

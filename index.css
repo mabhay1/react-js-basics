@@ -110,3 +110,121 @@ a{
     text-decoration: none;
     color: black;
 }
+
+/* RestaurantmenuCSS */
+.menu{
+    width: 70%;
+    margin: auto;
+}
+.resMenuTop{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.resName{
+    font-size: 1.43rem;
+    font-weight: 600;
+    color: #282c3f;
+    margin-bottom: 8px;
+}
+
+.resCuisines,.resLocation{
+    font-size: .93rem;
+    color: #7e808c;
+    margin-bottom: 4px;
+}
+.ratingSection{
+    border: 1px solid black;
+
+}
+.delivery-fee{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #7e808c;
+}
+
+.deliveryTimeCost{
+    display: flex;
+    gap:20px;
+    font-weight: 800;
+    margin: 20px 0;
+}
+
+.deliveryTime{
+    display: flex;
+    gap: 7px;
+}
+.costOfTwo{
+    display: flex;
+    gap: 7px;
+}
+.itemInfo{
+    display: flex;
+    justify-content: space-between;
+    /* list-style-type: none; */
+    border: 1px solid black;
+    align-items: center;
+}
+
+.itemImage{
+    width: 100px;
+}
+.vegOnlyFilter{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.toggleContainer-OFF{
+    position:relative;
+    background-color:grey;
+    margin:10px 0;
+    height: 20px;
+    width:4%;
+    cursor:pointer;
+    border-radius: 4px;
+}
+.toggleContainer-ON{
+    position:relative;
+    background-color:green;
+    margin:10px 0;
+    height: 20px;
+    width:4%;
+    cursor:pointer;
+    border-radius: 4px;
+}
+
+
+.toggleButton-OFF{
+    position:absolute;
+    padding:5px;
+    cursor:pointer;
+    background-color:white;
+    left: 0px;
+    height: 20px;
+    width: 20px;
+    border-radius: 4px;
+}
+.toggleButton-ON{
+    position: absolute;
+    padding:5px;
+    cursor:pointer;
+    background-color:white;
+    right: 0;
+    height: 20px;
+    width: 20px;
+    border-radius: 4px;
+}
+.toggleButtonDot{
+background: #0f8a65;
+width: 8px;
+height: 8px;
+border-radius: 50%;
+display: block;
+position: absolute;
+left: 50%;
+top: 50%;
+-webkit-transform: translate3d(-50%,-50%,0);
+transform: translate3d(-50%,-50%,0);}
+
+

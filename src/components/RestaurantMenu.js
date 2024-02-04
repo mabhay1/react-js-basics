@@ -2,9 +2,14 @@ import { useState,useEffect } from "react"
 import { RESMENU_URL } from "../utils/constants"
 import Shimmer from "./Shimmer"
 import { useParams } from "react-router-dom";
+import { CDN_URL } from "../utils/constants";
+import MenuItemCard from "./MenuItemCard";
 const RestaurantMenu=()=>{
     const [resInfo,setResInfo]=useState(null)
     const {resId} = useParams()
+    const [filteredItems,setFilteredItems] =useState([])
+    const [isToggled,setIsToggled]= useState('OFF')
+    
     useEffect(()=>{
         fetchMenu()
     },[])
@@ -12,24 +17,86 @@ const RestaurantMenu=()=>{
     const fetchMenu = async () => {
         const data = await fetch(RESMENU_URL+resId)
         const jsonData = await data.json()
-        // console.log(jsonData.data.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card)
+        
+        // console.log(jsonData.data.cards[2].groupedCard.cardGroupMap.REGULAR.cards[2].card.card.categories)
         setResInfo(jsonData.data)
+        setFilteredItems(jsonData?.data?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card?.itemCards)
     }
 
     if (resInfo===null){
         return <Shimmer/>
     }
-    const {name,cuisines,costForTwoMessage}=resInfo?.cards[0]?.card?.card?.info
-    const {itemCards} =resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card
+    const {name,cuisines,costForTwoMessage,areaName,sla,avgRating,totalRatingsString,feeDetails}=resInfo?.cards[0]?.card?.card?.info
+    let {itemCards} =resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card
+    // console.log(filteredItems)
+    // console.log(isToggled)
+    
     return(
         <div className="menu">
-            <h1>{name}</h1>
-            <h2>{cuisines.join(",")}- {costForTwoMessage}</h2>
-            <ul>
+            <div className="resMenuTop">
+                <div className="resTitleSection">
+                    <p className="resName">{name}</p>
+                    <p className="resCuisines">{cuisines.join(",")}</p>
+                    <p className="resLocation">{areaName}, {sla.lastMileTravelString}</p>
+                </div>
+                <div className="ratingSection">
+                    <p style={{fontWeight:"600",color:"green",textAlign:"center"}}><span className="fa fa-star"></span> {avgRating}</p>
+                    <div style={{height:"1px",backgroundColor:"black"}}></div>
+                    <p> {totalRatingsString}</p>
+                </div>
+            </div>
+
+            <div className="delivery-fee">
+                <div><img src={CDN_URL+feeDetails.icon} width="20px"></img></div>
+                <div>{feeDetails.message}</div>
+            </div>
+            <hr style={{opacity:"0.5"}}/>
+            <div className="deliveryTimeCost">
+                <div className="deliveryTime">
+                    <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" fill="none">
+                        <circle r="8.35" transform="matrix(-1 0 0 1 9 9)" stroke="#3E4152" strokeWidth="1.3">
+                        </circle>
+                        <path d="M3 15.2569C4.58666 16.9484 6.81075 18 9.273 18C14.0928 18 18 13.9706 18 9C18 4.02944 14.0928 0 9.273 0C9.273 2.25 9.273 9 9.273 9C6.36399 12 5.63674 12.75 3 15.2569Z" fill="#3E4152"></path>
+                    </svg> 
+                    <div>{sla.slaString}</div>
+                </div>
+                <div className="costOfTwo">
+                    <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" fill="none">
+                        <circle cx="9" cy="9" r="8.25" stroke="#3E4152" strokeWidth="1.5">
+                        </circle>
+                        <path d="M12.8748 4.495H5.6748V6.04H7.9698C8.7948 6.04 9.4248 6.43 9.6198 7.12H5.6748V8.125H9.6048C9.3798 8.8 8.7648 9.22 7.9698 9.22H5.6748V10.765H7.3098L9.5298 14.5H11.5548L9.1098 10.57C10.2048 10.39 11.2698 9.58 11.4498 8.125H12.8748V7.12H11.4348C11.3148 6.475 10.9698 5.905 10.4298 5.5H12.8748V4.495Z" fill="#3E4152">
+                        </path>
+                    </svg>
+                    <div>{costForTwoMessage}</div>
+                </div>
+            </div>
+            <div className="vegOnlyFilter">
+            <p>Veg Only</p>
+            <div className={"toggleContainer-"+isToggled} >
+                <button className={`tog toggleButton-${isToggled}`}  onClick={()=>{
+                    if(isToggled==='OFF'){
+                        setIsToggled("ON")
+                        setFilteredItems(itemCards?.filter((item)=>{return item.card.info.itemAttribute.vegClassifier==="VEG"}))
+                    }
+                    else{
+                        setIsToggled("OFF")
+                        setFilteredItems(itemCards)
+                    }
+                    
+                    
+                }}>
+                    {isToggled==='ON'?<span className="toggleButtonDot"></span>:<span></span>}
+                </button>
+            </div>
+
+            </div>
+            <div className="menuItemContainer">
                 {
-                itemCards?.map((restaurant)=><li id={restaurant.card.info.id}>{restaurant.card.info.name}</li>)
+                filteredItems?.map((restaurant)=>(
+                    <MenuItemCard key={restaurant.card.info.id}  itemData={restaurant}/>
+                ))
                 }
-            </ul>
+            </div>
         </div>
     )
 }
