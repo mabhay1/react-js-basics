@@ -4,32 +4,19 @@ import Shimmer from "./Shimmer"
 import { useParams } from "react-router-dom";
 import { CDN_URL } from "../utils/constants";
 import MenuItemCard from "./MenuItemCard";
+import useRestaurantMenu from "../utils/useRestaurantMenu";
 const RestaurantMenu=()=>{
-    const [resInfo,setResInfo]=useState(null)
     const {resId} = useParams()
-    const [filteredItems,setFilteredItems] =useState([])
     const [isToggled,setIsToggled]= useState('OFF')
-    
-    useEffect(()=>{
-        fetchMenu()
-    },[])
 
-    const fetchMenu = async () => {
-        const data = await fetch(RESMENU_URL+resId)
-        const jsonData = await data.json()
-        
-        // console.log(jsonData.data.cards[2].groupedCard.cardGroupMap.REGULAR.cards[2].card.card.categories)
-        setResInfo(jsonData.data)
-        setFilteredItems(jsonData?.data?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card?.itemCards)
-    }
+    const resInfo=useRestaurantMenu(resId)
+
 
     if (resInfo===null){
         return <Shimmer/>
     }
     const {name,cuisines,costForTwoMessage,areaName,sla,avgRating,totalRatingsString,feeDetails}=resInfo?.cards[0]?.card?.card?.info
     let {itemCards} =resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card
-    // console.log(filteredItems)
-    // console.log(isToggled)
     
     return(
         <div className="menu">
@@ -76,14 +63,11 @@ const RestaurantMenu=()=>{
                 <button className={`tog toggleButton-${isToggled}`}  onClick={()=>{
                     if(isToggled==='OFF'){
                         setIsToggled("ON")
-                        setFilteredItems(itemCards?.filter((item)=>{return item.card.info.itemAttribute.vegClassifier==="VEG"}))
                     }
                     else{
                         setIsToggled("OFF")
-                        setFilteredItems(itemCards)
                     }
-                    
-                    
+                                        
                 }}>
                     {isToggled==='ON'?<span className="toggleButtonDot"></span>:<span></span>}
                 </button>
@@ -92,7 +76,7 @@ const RestaurantMenu=()=>{
             </div>
             <div className="menuItemContainer">
                 {
-                filteredItems?.map((restaurant)=>(
+                itemCards?.map((restaurant)=>(
                     <MenuItemCard key={restaurant.card.info.id}  itemData={restaurant}/>
                 ))
                 }
