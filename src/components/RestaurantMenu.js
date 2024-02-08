@@ -1,45 +1,51 @@
-import { useState,useEffect } from "react"
-import { RESMENU_URL } from "../utils/constants"
 import Shimmer from "./Shimmer"
 import { useParams } from "react-router-dom";
 import { CDN_URL } from "../utils/constants";
-import MenuItemCard from "./MenuItemCard";
 import useRestaurantMenu from "../utils/useRestaurantMenu";
+import RestaurantCategory from "./RestaurantCategory";
+import NestedRestaurantCategory from "./NestedRestaurantCategory";
+import { useState } from "react";
 const RestaurantMenu=()=>{
     const {resId} = useParams()
-    const [isToggled,setIsToggled]= useState('OFF')
-
     const resInfo=useRestaurantMenu(resId)
+
+    const [isVeg,setIsVeg]=useState(false)
 
 
     if (resInfo===null){
         return <Shimmer/>
     }
     const {name,cuisines,costForTwoMessage,areaName,sla,avgRating,totalRatingsString,feeDetails}=resInfo?.cards[0]?.card?.card?.info
-    let {itemCards} =resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card
+    const {itemCards} =resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card
+    const categories=resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter((c)=>c?.card?.card["@type"]==="type.googleapis.com/swiggy.presentation.food.v2.ItemCategory")
+    const nestedCategories=resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter((c)=>c?.card?.card["@type"]==="type.googleapis.com/swiggy.presentation.food.v2.NestedItemCategory")
+
+
+    
+
     
     return(
-        <div className="menu">
-            <div className="resMenuTop">
-                <div className="resTitleSection">
-                    <p className="resName">{name}</p>
-                    <p className="resCuisines">{cuisines.join(",")}</p>
-                    <p className="resLocation">{areaName}, {sla.lastMileTravelString}</p>
+        <div className="menu w-8/12 mx-[auto] my-10">
+            <div className="flex justify-between my-4">
+                <div className="resTitleSection w-9/12">
+                    <p className=" font-bold text-xl">{name}</p>
+                    <p className=" text-sm">{cuisines.join(",")}</p>
+                    <p className=" text-sm">{areaName}, {sla.lastMileTravelString}</p>
                 </div>
-                <div className="ratingSection">
-                    <p style={{fontWeight:"600",color:"green",textAlign:"center"}}><span className="fa fa-star"></span> {avgRating}</p>
-                    <div style={{height:"1px",backgroundColor:"black"}}></div>
-                    <p> {totalRatingsString}</p>
+                <div className="ratingSection w-1/12 border border-solid">
+                    <div className=" text-green-700 h-[50%] flex items-center gap-1 justify-center"><span className="fa fa-star"></span> {avgRating}</div>
+                    <hr className=" w-[90%] m-[auto]"></hr>
+                    <div className="text-xs h-[50%] flex items-center justify-center"> {totalRatingsString}</div>
                 </div>
             </div>
 
-            <div className="delivery-fee">
+            <div className="delivery-fee flex items-center gap-1 text-sm my-4">
                 <div><img src={CDN_URL+feeDetails.icon} width="20px"></img></div>
                 <div>{feeDetails.message}</div>
             </div>
-            <hr style={{opacity:"0.5"}}/>
-            <div className="deliveryTimeCost">
-                <div className="deliveryTime">
+            <hr/>
+            <div className="deliveryTimeCost flex gap-4 font-bold my-4">
+                <div className="deliveryTime flex items-center gap-2">
                     <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" fill="none">
                         <circle r="8.35" transform="matrix(-1 0 0 1 9 9)" stroke="#3E4152" strokeWidth="1.3">
                         </circle>
@@ -47,7 +53,7 @@ const RestaurantMenu=()=>{
                     </svg> 
                     <div>{sla.slaString}</div>
                 </div>
-                <div className="costOfTwo">
+                <div className="costOfTwo flex items-center gap-2">
                     <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" fill="none">
                         <circle cx="9" cy="9" r="8.25" stroke="#3E4152" strokeWidth="1.5">
                         </circle>
@@ -57,29 +63,25 @@ const RestaurantMenu=()=>{
                     <div>{costForTwoMessage}</div>
                 </div>
             </div>
-            <div className="vegOnlyFilter">
-            <p>Veg Only</p>
-            <div className={"toggleContainer-"+isToggled} >
-                <button className={`tog toggleButton-${isToggled}`}  onClick={()=>{
-                    if(isToggled==='OFF'){
-                        setIsToggled("ON")
-                    }
-                    else{
-                        setIsToggled("OFF")
-                    }
-                                        
-                }}>
-                    {isToggled==='ON'?<span className="toggleButtonDot"></span>:<span></span>}
-                </button>
-            </div>
+            <div className="flex items-center gap-2">
+                <span>Veg Only</span>
+                
+                <button className={isVeg?" bg-green-300 p-1 rounded-lg":" bg-red-400 p-1 rounded-lg"} onClick={()=>{
+                    setIsVeg(!isVeg)
+                    }}>{isVeg?"ON":"OFF"}</button>
+                
 
+            
             </div>
-            <div className="menuItemContainer">
-                {
-                itemCards?.map((restaurant)=>(
-                    <MenuItemCard key={restaurant.card.info.id}  itemData={restaurant}/>
-                ))
-                }
+            <div>
+                {categories.map((category)=>(
+                    <RestaurantCategory key={category.card.card.title} data={category?.card?.card} vegSelected={isVeg}/>
+                ))}
+            </div>
+            <div>
+                {nestedCategories.map((nestedCategory)=>(
+                    <NestedRestaurantCategory key={nestedCategory.card.card.title} nestData={nestedCategory?.card?.card} vegSelected={isVeg} />
+                ))}
             </div>
         </div>
     )

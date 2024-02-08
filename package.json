@@ -19,7 +19,8 @@
   "homepage": "https://github.com/mabhay1/react-js-basics#readme",
   "devDependencies": {
     "parcel": "^2.11.0",
-    "process": "^0.11.10"
+    "process": "^0.11.10",
+    "tailwindcss": "^3.4.1"
   },
   "dependencies": {
     "package.json": "^2.0.1",

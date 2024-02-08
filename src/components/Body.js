@@ -3,7 +3,7 @@ import { useState,useEffect } from "react"
 import Shimmer from "./Shimmer"
 import { Link } from "react-router-dom"
 import useOnlineStatus from "../utils/useOnlineStatus";;
-
+import { withDiscountLabel } from "./RestaurantCard";
 const Body = () => {
 
     const [searchText,setSearchText] = useState("")
@@ -11,6 +11,7 @@ const Body = () => {
     // local state variables - useState hook - when variable updates react rerender component
     const [listOfRestaurants,setListOfRestaurants] = useState([])
     const [filteredRestaurants,setFilteredRestaurants] = useState([])
+    const RestaurantCardDiscountLabel=withDiscountLabel(RestaurantCard)
     
     // useEffect hook calls callback fuction after component rendered
     useEffect(()=>{
@@ -22,7 +23,7 @@ const Body = () => {
         const jsonData = await data.json()
         // console.log(jsonData.data.cards[1].card.card.gridElements.infoWithStyle)
         // optional chaining
-        console.log(jsonData)
+        
         if(jsonData?.data?.cards[0]?.card?.card?.gridElements?.infoWithStyle?.restaurants){
             setListOfRestaurants(jsonData?.data?.cards[0]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
             setFilteredRestaurants(jsonData?.data?.cards[0]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
@@ -48,8 +49,8 @@ const Body = () => {
             setFilteredRestaurants(jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
         }
         
-        // setListOfRestaurants(jsonData?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
-        // setFilteredRestaurants(jsonData?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
+        // setListOfRestaurants(jsonData?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
+        // setFilteredRestaurants(jsonData?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
     }
     const onlineStatus=useOnlineStatus()
 
@@ -64,12 +65,13 @@ const Body = () => {
     <Shimmer/>
     ): (
         <div className="body">
-            <div className="filter">
-                <div className="search">
-                    <input type="text" className="search-box" value={searchText} onChange={(e)=>{
+            <div className="filter flex items-center">
+                <div className="search m-4 p-4">
+                    <input type="text" className="border border-solid border-black" value={searchText} onChange={(e)=>{
                         setSearchText(e.target.value)
                         }}/>
-                    <button onClick={()=>{
+                        
+                    <button className="px-4 py-2 mx-4 bg-green-100 rounded-lg" onClick={()=>{
                         console.log(searchText)
                         setFilteredRestaurants(listOfRestaurants.filter(
                             (res)=>(
@@ -77,21 +79,24 @@ const Body = () => {
                             )))
                         }}>Search</button>
                 </div>
-                <button 
-                className="filter-btn" 
-                onClick={()=>{
-                    const filteredList=listOfRestaurants.filter((res)=>res.info.avgRating >= 4.3)
-                    setFilteredRestaurants(filteredList)
+                <div>
+                    <button 
+                    className="px-4 py-2 mx-4 bg-green-100 rounded-lg" 
+                    onClick={()=>{
+                        const filteredList=listOfRestaurants.filter((res)=>res.info.avgRating >= 4.3)
+                        setFilteredRestaurants(filteredList)
                     
                     
                     }}> 
                         Top Rated Restaurant
-                </button>
+                    </button>
+                </div>
+
             </div>
-            <div className="res-container">                                       
+            <div className="flex flex-wrap">                                       
               {filteredRestaurants.map((restaurant)=>(
                 <Link key={restaurant.info.id} to={"/restaurants/"+restaurant.info.id}>
-                    <RestaurantCard resData={restaurant} />
+                    {restaurant?.info?.aggregatedDiscountInfoV3?<RestaurantCardDiscountLabel resData={restaurant}/>:<RestaurantCard resData={restaurant} />}
                 </Link>
               ))}
             </div>
