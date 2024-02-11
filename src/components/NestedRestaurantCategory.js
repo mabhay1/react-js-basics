@@ -1,7 +1,7 @@
 import RestaurantCategory from "./RestaurantCategory"
 
-const NestedRestaurantCategory=({nestData,vegSelected})=>{
-    console.log(nestData)
+const NestedRestaurantCategory=({nestData,vegSelected,showCategoryTitle,setShowCategoryTitle})=>{
+    
     let hasCategories=true
     if(vegSelected===true){
         hasCategories=false
@@ -22,7 +22,15 @@ const NestedRestaurantCategory=({nestData,vegSelected})=>{
                 {/* Accordian Body */}
                 <div>
                     {nestData.categories.map((category)=>(
-                        <RestaurantCategory key={category.title} data={category} vegSelected={vegSelected}/>
+                        <RestaurantCategory 
+                            key={category.title} 
+                            data={category} 
+                            vegSelected={vegSelected}
+                            showItems={category.title===showCategoryTitle?true:false}
+                            categoryTitle={showCategoryTitle}
+                            setShowCategoryTitle={()=>setShowCategoryTitle(category.title)}
+                            setShowCategoryTitleNull={()=>setShowCategoryTitle(null)}
+                        />
                     ))}
                 </div>
             </div>

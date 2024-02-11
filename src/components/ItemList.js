@@ -1,4 +1,6 @@
 import { CDN_URL } from "../utils/constants"
+import vegIcon from "../images/vegIcon.png"
+import nonVegIcon from "../images/nonVegIcon.png"
 const ItemList=({items})=>{
     // console.log(items)
     return (
@@ -6,6 +8,9 @@ const ItemList=({items})=>{
         {items.map((item)=>(
             <div key={item.card.info.id} className="m-2 p-2 border-b-2 border-gray-200 flex justify-between">
                 <div className="w-10/12">
+                    <div>
+                        <img src={item.card.info.itemAttribute.vegClassifier==="VEG"?vegIcon:nonVegIcon} />
+                    </div>
                     <div className="py-2">
                         <span>{item.card.info.name}</span>
                         <span> - ₹ {(item.card.info.price||item.card.info.defaultPrice)/100}</span>

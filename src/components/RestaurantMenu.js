@@ -8,6 +8,7 @@ import { useState } from "react";
 const RestaurantMenu=()=>{
     const {resId} = useParams()
     const resInfo=useRestaurantMenu(resId)
+    const [showCategoryTitle,setShowCategoryTitle]= useState(null)
 
     const [isVeg,setIsVeg]=useState(false)
 
@@ -19,9 +20,6 @@ const RestaurantMenu=()=>{
     const {itemCards} =resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card
     const categories=resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter((c)=>c?.card?.card["@type"]==="type.googleapis.com/swiggy.presentation.food.v2.ItemCategory")
     const nestedCategories=resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter((c)=>c?.card?.card["@type"]==="type.googleapis.com/swiggy.presentation.food.v2.NestedItemCategory")
-
-
-    
 
     
     return(
@@ -69,18 +67,30 @@ const RestaurantMenu=()=>{
                 <button className={isVeg?" bg-green-300 p-1 rounded-lg":" bg-red-400 p-1 rounded-lg"} onClick={()=>{
                     setIsVeg(!isVeg)
                     }}>{isVeg?"ON":"OFF"}</button>
-                
-
-            
+                            
             </div>
             <div>
                 {categories.map((category)=>(
-                    <RestaurantCategory key={category.card.card.title} data={category?.card?.card} vegSelected={isVeg}/>
+                    <RestaurantCategory 
+                        key={category.card.card.title} 
+                        data={category?.card?.card} 
+                        vegSelected={isVeg} 
+                        showItems={category.card.card.title===showCategoryTitle?true:false}
+                        categoryTitle={showCategoryTitle}
+                        setShowCategoryTitle={()=>setShowCategoryTitle(category.card.card.title)}
+                        setShowCategoryTitleNull={()=>setShowCategoryTitle(null)}
+                    />
                 ))}
             </div>
             <div>
                 {nestedCategories.map((nestedCategory)=>(
-                    <NestedRestaurantCategory key={nestedCategory.card.card.title} nestData={nestedCategory?.card?.card} vegSelected={isVeg} />
+                    <NestedRestaurantCategory 
+                        key={nestedCategory.card.card.title} 
+                        nestData={nestedCategory?.card?.card} 
+                        vegSelected={isVeg} 
+                        showCategoryTitle={showCategoryTitle}
+                        setShowCategoryTitle={setShowCategoryTitle}
+                    />
                 ))}
             </div>
         </div>

@@ -1,9 +1,11 @@
 import RestaurantCard from "./RestaurantCard"
-import { useState,useEffect } from "react"
+import { useState,useEffect, useContext } from "react"
 import Shimmer from "./Shimmer"
 import { Link } from "react-router-dom"
 import useOnlineStatus from "../utils/useOnlineStatus";;
 import { withDiscountLabel } from "./RestaurantCard";
+import UserContext from "../utils/UserContext";
+import UserContext from "../utils/UserContext";
 const Body = () => {
 
     const [searchText,setSearchText] = useState("")
@@ -54,6 +56,8 @@ const Body = () => {
     }
     const onlineStatus=useOnlineStatus()
 
+    const {loggedInUser,setUserName}=useContext(UserContext)
+
     if (onlineStatus===false){
         return(
         <h1>
@@ -90,6 +94,10 @@ const Body = () => {
                     }}> 
                         Top Rated Restaurant
                     </button>
+                </div>
+                <div>
+                    <label>UserName : </label>
+                    <input className="border border-black p-2" value={loggedInUser} onChange={(e)=>setUserName(e.target.value)}></input>
                 </div>
 
             </div>
