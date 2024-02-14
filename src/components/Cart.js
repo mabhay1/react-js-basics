@@ -21,8 +21,6 @@ const Cart = () =>{
         dispatch(removeItem(item))
         
     }
-    console.log(cartItems.map((cartItem)=>cartItem.card.info.name))
-    console.log(countEachCartItem)
 
     const totalPrice=cartItems.reduce((price,carts)=>{
         

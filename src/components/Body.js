@@ -11,6 +11,7 @@ const Body = () => {
     const [searchText,setSearchText] = useState("")
 
     // local state variables - useState hook - when variable updates react rerender component
+    const [resTitle,setResTitle]= useState("")
     const [listOfRestaurants,setListOfRestaurants] = useState([])
     const [filteredRestaurants,setFilteredRestaurants] = useState([])
     const RestaurantCardDiscountLabel=withDiscountLabel(RestaurantCard)
@@ -23,30 +24,36 @@ const Body = () => {
     const fetchData = async () => {
         const data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.6369411&lng=77.2056647&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING")
         const jsonData = await data.json()
-        // console.log(jsonData.data.cards[1].card.card.gridElements.infoWithStyle)
+        console.log(jsonData.data.cards[1].card.card.header.title)
         // optional chaining
         
         if(jsonData?.data?.cards[0]?.card?.card?.gridElements?.infoWithStyle?.restaurants){
+            setResTitle(jsonData?.data?.cards[0]?.card?.card?.header?.title)
             setListOfRestaurants(jsonData?.data?.cards[0]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
             setFilteredRestaurants(jsonData?.data?.cards[0]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
         }
         else if(jsonData?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants){
+            setResTitle(jsonData?.data?.cards[1]?.card?.card?.header?.title)
             setListOfRestaurants(jsonData?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
             setFilteredRestaurants(jsonData?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
         }
         else if(jsonData?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants){
+            setResTitle(jsonData?.data?.cards[2]?.card?.card?.header?.title)
             setListOfRestaurants(jsonData?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
             setFilteredRestaurants(jsonData?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
         }
         else if(jsonData?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.restaurants){
+            setResTitle(jsonData?.data?.cards[3]?.card?.card?.header?.title)
             setListOfRestaurants(jsonData?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
             setFilteredRestaurants(jsonData?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
         }
         else if(jsonData?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants){
+            setResTitle(jsonData?.data?.cards[4]?.card?.card?.header?.title)
             setListOfRestaurants(jsonData?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
             setFilteredRestaurants(jsonData?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
         }
         else if(jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants){
+            setResTitle(jsonData?.data?.cards[5]?.card?.card?.header?.title)
             setListOfRestaurants(jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
             setFilteredRestaurants(jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
         }
@@ -71,7 +78,7 @@ const Body = () => {
         <div className="body">
             <div className="filter flex items-center">
                 <div className="search m-4 p-4">
-                    <input type="text" className="border border-solid border-black" value={searchText} onChange={(e)=>{
+                    <input type="text" className="border border-solid border-black p-2" value={searchText} onChange={(e)=>{
                         setSearchText(e.target.value)
                         }}/>
                         
@@ -101,7 +108,8 @@ const Body = () => {
                 </div>
 
             </div>
-            <div className="flex flex-wrap">                                       
+            <h1 className=" font-bold text-2xl w-11/12 m-auto">{resTitle}</h1>
+            <div className="flex flex-wrap w-11/12 m-auto">                                       
               {filteredRestaurants.map((restaurant)=>(
                 <Link key={restaurant.info.id} to={"/restaurants/"+restaurant.info.id}>
                     {restaurant?.info?.aggregatedDiscountInfoV3?<RestaurantCardDiscountLabel resData={restaurant}/>:<RestaurantCard resData={restaurant} />}
