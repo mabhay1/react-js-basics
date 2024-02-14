@@ -1,8 +1,14 @@
 import { CDN_URL } from "../utils/constants"
 import vegIcon from "../images/vegIcon.png"
 import nonVegIcon from "../images/nonVegIcon.png"
+import { useDispatch } from "react-redux"
+import { addItem } from "../utils/cartSlice"
 const ItemList=({items})=>{
     // console.log(items)
+    const dispatch =useDispatch()
+    const handleAddItem=(item)=>{
+        dispatch(addItem(item))
+    }
     return (
     <div>
         {items.map((item)=>(
@@ -20,7 +26,7 @@ const ItemList=({items})=>{
                 <div className="w-2/12">
                    
                     <div className="absolute">
-                        <button className="py-2 bg-black text-white shadow-lg rounded-lg px-8 mx-5">Add +</button>
+                        <button className="py-2 bg-black text-white shadow-lg rounded-lg px-8 mx-5" onClick={()=>handleAddItem(item)}>Add +</button>
                     </div>
                     <img src={CDN_URL+item.card.info.imageId} />
                 </div>

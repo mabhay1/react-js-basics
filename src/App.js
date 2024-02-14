@@ -7,8 +7,10 @@ import Contact from "./components/Contact"
 import Error from "./components/Error"
 import RestaurantMenu from "./components/RestaurantMenu"
 import { createBrowserRouter,RouterProvider,Outlet } from "react-router-dom"
-import Accordion from "./components/Accordian"
 import UserContext from "./utils/UserContext"
+import { Provider } from "react-redux"
+import appStore from "./utils/appStore"
+import Cart from "./components/Cart"
 
 // Chunking
 // Code Splitting
@@ -32,12 +34,15 @@ const AppLayout = () => {
     },[])
 
     return (
-        <UserContext.Provider value={{loggedInUser:userName, setUserName}}>
-            <div className="app">
-                <Header/>
-                <Outlet/>
-            </div>
+        <Provider store={appStore}>
+            <UserContext.Provider value={{loggedInUser:userName, setUserName}}>
+                <div className="app">
+                    <Header/>
+                    <Outlet/>
+                </div>
         </UserContext.Provider>
+        </Provider>
+
 
     )
 }
@@ -68,8 +73,8 @@ const appRouter=createBrowserRouter([
                 element: <RestaurantMenu/>
             },
             {
-                path:"/accordian",
-                element: <Accordion/>
+                path:"/cart",
+                element: <Cart/>
             }
         ],
         errorElement: <Error/>

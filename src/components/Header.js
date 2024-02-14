@@ -3,13 +3,19 @@ import {useState,useContext} from "react"
 import { Link } from "react-router-dom"
 import useOnlineStatus from "../utils/useOnlineStatus"
 import UserContext from "../utils/UserContext"
+import { useSelector } from "react-redux"
 
 
 const Header = () => {
     const [btnName,setBtnName]=useState("login")
     const onlineStatus=useOnlineStatus()
     const {loggedInUser}=useContext(UserContext)
-    
+    const cartItems=useSelector((store)=>store.cart.items)
+    const countEachCartItem=useSelector((store)=>store.cart.countEachItem)
+    let totalItems=0
+    for(key in countEachCartItem){
+        totalItems+=countEachCartItem[key]
+    }
     return (
     <div className="main-HEADER"> 
         <div className="flex justify-between bg-green-50 shadow-lg items-center sm:bg-pink-50">
@@ -27,7 +33,7 @@ const Header = () => {
                     <li><Link to="/about">About Us</Link></li>
                     <li><Link to="/contact">Contact Us</Link></li>
                     <li><Link to="/grocery">Grocery</Link></li>
-                    <li>Cart</li>
+                    <li className="font-bold"><Link to="/cart">Cart - {totalItems} items</Link></li>
                     <button className=" shadow-lg p-3 rounded-lg bg-green-50" onClick={()=>{
                         btnName==="login"?setBtnName("logout"):setBtnName("login")
                         }}>{btnName}</button>
