@@ -7,7 +7,7 @@ const Cart = () =>{
     const cartItems=useSelector((store)=>store.cart.items)
     const countEachCartItem=useSelector((store)=>store.cart.countEachItem)
     let totalItems=0
-    for(key in countEachCartItem){
+    for(const key in countEachCartItem){
         totalItems+=countEachCartItem[key]
     }
     const dispatch=useDispatch()
@@ -41,7 +41,7 @@ const Cart = () =>{
                 <div>Total Price: ₹ {totalPrice}</div>
                 <div>Total items: {totalItems}</div>
                 {cartItems.map((item)=>(
-                    <div key={item.card.info.id} className=" my-2 py-2 border-b-2 border-gray-500 flex justify-between">
+                    <div data-testid="cartItems" key={item.card.info.id} className=" my-2 py-2 border-b-2 border-gray-500 flex justify-between">
                     <div className="w-10/12">
 
                         <div className="py-2">

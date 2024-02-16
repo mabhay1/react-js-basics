@@ -3,7 +3,7 @@ import ItemList from "./ItemList"
 
 const RestaurantCategory=({data,vegSelected,showItems,categoryTitle,setShowCategoryTitle,setShowCategoryTitleNull})=>{
 
-
+    let items=data.itemCards
     const handleClick = ()=>{
 
         

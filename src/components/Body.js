@@ -5,7 +5,6 @@ import { Link } from "react-router-dom"
 import useOnlineStatus from "../utils/useOnlineStatus";;
 import { withDiscountLabel } from "./RestaurantCard";
 import UserContext from "../utils/UserContext";
-import UserContext from "../utils/UserContext";
 const Body = () => {
 
     const [searchText,setSearchText] = useState("")
@@ -24,7 +23,6 @@ const Body = () => {
     const fetchData = async () => {
         const data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.6369411&lng=77.2056647&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING")
         const jsonData = await data.json()
-        console.log(jsonData.data.cards[1].card.card.header.title)
         // optional chaining
         
         if(jsonData?.data?.cards[0]?.card?.card?.gridElements?.infoWithStyle?.restaurants){
@@ -78,12 +76,11 @@ const Body = () => {
         <div className="body">
             <div className="filter flex items-center">
                 <div className="search m-4 p-4">
-                    <input type="text" className="border border-solid border-black p-2" value={searchText} onChange={(e)=>{
+                    <input type="text" data-testid="searchInput" className="border border-solid border-black p-2" value={searchText} onChange={(e)=>{
                         setSearchText(e.target.value)
                         }}/>
                         
                     <button className="px-4 py-2 mx-4 bg-green-100 rounded-lg" onClick={()=>{
-                        console.log(searchText)
                         setFilteredRestaurants(listOfRestaurants.filter(
                             (res)=>(
                                 res.info.name.toLowerCase().includes(searchText.toLowerCase())

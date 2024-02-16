@@ -13,7 +13,7 @@ const Header = () => {
     const cartItems=useSelector((store)=>store.cart.items)
     const countEachCartItem=useSelector((store)=>store.cart.countEachItem)
     let totalItems=0
-    for(key in countEachCartItem){
+    for(const key in countEachCartItem){
         totalItems+=countEachCartItem[key]
     }
     return (

@@ -7,8 +7,9 @@ const RestaurantCard = (props) => {
     const {name,cuisines,avgRating,costForTwo,cloudinaryImageId}=resData.info
     const {loggedInUser}=useContext(UserContext)
 
+
     return (
-        <div className="m-4 p-4 w-[300px] rounded-lg bg-gray-100  hover:bg-gray-200" >
+        <div data-testid="resCard" className="m-4 p-4 w-[300px] rounded-lg bg-gray-100  hover:bg-gray-200" >
             <img className=" rounded-lg h-[170px] w-[280px]" src={(CDN_URL+cloudinaryImageId)}/>
             
             <h3 className=" font-bold text-xl py-4">{name}</h3>
@@ -33,7 +34,7 @@ export const withDiscountLabel =(RestaurantCard)=>{
         
         return (
             <div>
-                <label className=" absolute text-white mt-[145px] ml-[40px] font-black text-xl">{resData.info.aggregatedDiscountInfoV3.header+" "+ resData.info.aggregatedDiscountInfoV3.subHeader}</label>
+                <label data-testid="discountLabel" className=" absolute text-white mt-[145px] ml-[40px] font-black text-xl">{resData.info.aggregatedDiscountInfoV3.header+" "+ resData.info.aggregatedDiscountInfoV3.subHeader}</label>
                 <RestaurantCard {...props}/>
             </div>
         )

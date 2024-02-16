@@ -1,6 +1,4 @@
 import { CDN_URL } from "../utils/constants"
-import vegIcon from "../images/vegIcon.png"
-import nonVegIcon from "../images/nonVegIcon.png"
 import { useDispatch } from "react-redux"
 import { addItem } from "../utils/cartSlice"
 const ItemList=({items})=>{
@@ -12,10 +10,10 @@ const ItemList=({items})=>{
     return (
     <div>
         {items.map((item)=>(
-            <div key={item.card.info.id} className="m-2 p-2 border-b-2 border-gray-200 flex justify-between">
+            <div data-testid="foodItems" key={item.card.info.id} className="m-2 p-2 border-b-2 border-gray-200 flex justify-between">
                 <div className="w-10/12">
                     <div>
-                        <img src={item.card.info.itemAttribute.vegClassifier==="VEG"?vegIcon:nonVegIcon} />
+                        {item.card.info.itemAttribute.vegClassifier==="VEG"?"🟢":"🔴"}
                     </div>
                     <div className="py-2">
                         <span>{item.card.info.name}</span>
